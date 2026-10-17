@@ -12,6 +12,9 @@ updates:
     # Ignore Abstractions packages - these should not be updated
     ignore:
       - dependency-name: "*Abstractions"
+      # The tooling runs in the consumer's compiler: Roslyn sets the minimum supported SDK
+      # (see Directory.Packages.props and the MinimumSdk test). Upgrade deliberately.
+      - dependency-name: "Microsoft.CodeAnalysis.CSharp"
     groups:
        # Grouped version updates configuration
        all-dependencies:
