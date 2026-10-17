@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Title>Annotype</Title>
+    <Description>Move invariants from instances to types. Compile-time enforced, reflection-free type metadata for .NET: interfaces declare required attributes, an analyzer enforces them, and a source generator emits a registry to read them back without reflection.</Description>
+    <PackageTags>attributes;metadata;analyzer;source-generator;roslyn;plugins;aot</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Annotype.Runtime.Tests" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" Visible="false" />
+  </ItemGroup>
+
+  <!-- The analyzer and generator ship inside this package under analyzers/dotnet/cs so that a single
+       PackageReference brings both the runtime API and the compile-time tooling. -->
+  <ItemGroup>
+    <ProjectReference Include="../Annotype.Tooling/Annotype.Tooling.csproj"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="all"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <Target Name="AddAnnotypeToolingToPackage" BeforeTargets="_GetPackageFiles">
+    <MSBuild Projects="../Annotype.Tooling/Annotype.Tooling.csproj" Targets="GetTargetPath" Properties="TargetFramework=netstandard2.0">
+      <Output TaskParameter="TargetOutputs" ItemName="_AnnotypeToolingAssembly" />
+    </MSBuild>
+    <ItemGroup>
+      <None Include="@(_AnnotypeToolingAssembly)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+  </Target>
+
+</Project>

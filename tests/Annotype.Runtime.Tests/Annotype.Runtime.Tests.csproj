@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Annotype/Annotype.csproj" />
+    <!-- The generator runs on this project too, producing Annotype.Generated.Annotype_Runtime_Tests.MetadataRegistry. -->
+    <ProjectReference Include="../../src/Annotype.Tooling/Annotype.Tooling.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+    <!-- Contract, plugin and this host are separate assemblies. -->
+    <ProjectReference Include="../../samples/Payments.Plugins/Payments.Plugins.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Annotype/Annotype.csproj" />
+    <ProjectReference Include="../../src/Annotype.Tooling/Annotype.Tooling.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../Shared/TestCompilation.cs" Link="Shared/TestCompilation.cs" />
+  </ItemGroup>
+
+</Project>

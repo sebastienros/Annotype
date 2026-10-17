@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsAotCompatible>true</IsAotCompatible>
+    <!-- dotnet publish samples/Payments.Host -r <rid> -p:AnnotypeSampleAot=true (a global PublishAot would also apply to netstandard2.0 references). -->
+    <PublishAot Condition="'$(AnnotypeSampleAot)' == 'true'">true</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Payments.Plugins/Payments.Plugins.csproj" />
+  </ItemGroup>
+
+</Project>

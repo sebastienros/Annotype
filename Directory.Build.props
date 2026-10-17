@@ -1,0 +1,47 @@
+<Project>
+
+  <PropertyGroup>
+
+    <Copyright>Sebastien Ros</Copyright>
+    <Authors>Sebastien Ros</Authors>
+    <PackageProjectUrl>https://github.com/sebastienros/annotype</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sebastienros/annotype</RepositoryUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>preview</VersionSuffix>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <LangVersion>Latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <DebugType>portable</DebugType>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Projects opt in to packing explicitly. -->
+    <IsPackable>false</IsPackable>
+
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analysis rules">
+
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
+
+    <!-- Prefix generic type parameter name with 'T'  -->
+    <NoWarn>$(NoWarn);CA1715;</NoWarn>
+
+    <!-- Do not declare visible instance fields  -->
+    <NoWarn>$(NoWarn);CA1051;</NoWarn>
+
+    <!-- Identifier contains type name  -->
+    <NoWarn>$(NoWarn);CA1720;</NoWarn>
+
+    <!-- Identifiers should not match keywords  -->
+    <NoWarn>$(NoWarn);CA1716;</NoWarn>
+
+  </PropertyGroup>
+
+</Project>

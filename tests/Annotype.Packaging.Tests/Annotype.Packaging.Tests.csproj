@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- These tests pack Annotype from a copy of the sources and build isolated consumer projects with the
+       dotnet CLI, exactly as a NuGet consumer would. They need network access to nuget.org. -->
+
+</Project>

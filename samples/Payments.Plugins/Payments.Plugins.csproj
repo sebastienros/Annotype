@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Build with -p:AnnotypeDemoInvalidPlugin=true to see ANNO001 fail the build. -->
+    <DefineConstants Condition="'$(AnnotypeDemoInvalidPlugin)' == 'true'">$(DefineConstants);ANNOTYPE_DEMO_INVALID_PLUGIN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Payments.Contracts/Payments.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

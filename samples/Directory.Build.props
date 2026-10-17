@@ -1,0 +1,19 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- In the repository the samples consume Annotype through project references. A NuGet consumer only needs
+       <PackageReference Include="Annotype" />, which brings both the runtime and the analyzer/generator. -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../src/Annotype/Annotype.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../src/Annotype.Tooling/Annotype.Tooling.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>
