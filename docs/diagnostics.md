@@ -13,13 +13,21 @@ Diagnostics only exist in compilations that load the Annotype tooling, which a d
 
 **Implementation is missing required metadata** (error)
 
-A concrete class implements an interface marked `[RequiresMetadata(typeof(X))]`, directly, through a base
-class, or through an inherited interface, but does not declare `[X]` on its own declaration.
+A concrete class is bound to a `[RequiresMetadata(typeof(X))]` contract but does not declare `[X]` on its own
+declaration. A class is bound to a contract when it:
+
+- implements a contract interface, directly, through a base class, or through an inherited interface;
+- derives, at any depth, from a contract class;
+- is itself a concrete contract class.
 
 ```csharp
 // error ANNO001: Type 'InvalidPlugin' implements 'Payments.Contracts.IPlugin'
 // but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'
 public sealed class InvalidPlugin : IPlugin { public void Execute() { } }
+
+// error ANNO001: Type 'AuditPlugin' derives from 'PluginBase'
+// but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'
+public sealed class AuditPlugin : PluginBase { }
 ```
 
 Rules:

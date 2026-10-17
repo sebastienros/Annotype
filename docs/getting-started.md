@@ -41,6 +41,25 @@ public interface IPlugin
 An interface can carry several `[RequiresMetadata]` attributes. Interfaces deriving from `IPlugin` inherit
 its requirements.
 
+Contracts can also be classes, typically an abstract base class. Every concrete class deriving from it, at any
+depth, must declare the attribute itself:
+
+```csharp
+[RequiresMetadata(typeof(PluginMetadataAttribute))]
+public abstract class PluginBase
+{
+    public abstract void Execute();
+}
+
+[PluginMetadata("audit")]
+public sealed class AuditPlugin : PluginBase
+{
+    public override void Execute() { }
+}
+```
+
+A concrete class marked with `[RequiresMetadata]` must also satisfy its own requirement.
+
 ## 2. Plugins
 
 ```csharp

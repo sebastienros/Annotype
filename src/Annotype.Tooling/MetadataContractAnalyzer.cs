@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Annotype.Tooling;
 
 /// <summary>
-/// Enforces [RequiresMetadata] contracts: reports ANNO001 on concrete implementations missing a required
-/// attribute and ANNO002 on invalid contracts.
+/// Enforces [RequiresMetadata] contracts declared on interfaces and classes: reports ANNO001 on concrete classes
+/// missing a required attribute and ANNO002 on invalid contracts.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class MetadataContractAnalyzer : DiagnosticAnalyzer
@@ -40,13 +40,12 @@ public sealed class MetadataContractAnalyzer : DiagnosticAnalyzer
     {
         var type = (INamedTypeSymbol)context.Symbol;
 
-        if (type.TypeKind == TypeKind.Interface)
+        if (type.TypeKind is TypeKind.Interface or TypeKind.Class)
         {
             AnalyzeContract(context, type, symbols);
-            return;
         }
 
-        if (!ContractModel.IsInScope(type) || type.AllInterfaces.IsEmpty)
+        if (!ContractModel.IsInScope(type))
         {
             return;
         }
@@ -83,7 +82,7 @@ public sealed class MetadataContractAnalyzer : DiagnosticAnalyzer
                 DiagnosticDescriptors.MissingRequiredMetadata,
                 location,
                 type.ToDisplayString(),
-                ContractModel.JoinContracts(requirement.Contracts),
+                ContractModel.DescribeContracts(type, requirement.Contracts),
                 requirement.AttributeType.ToDisplayString()));
         }
     }

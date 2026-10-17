@@ -158,15 +158,32 @@ internal static class ContractModel
     }
 
     /// <summary>
-    /// Collects the requirements of every contract implemented by <paramref name="type"/>, directly or through
-    /// base classes and inherited interfaces. Valid requirements are grouped by attribute type, in a stable order.
+    /// Returns the types whose [RequiresMetadata] apply to <paramref name="type"/>: every interface it implements,
+    /// directly or through base classes and inherited interfaces, then the type itself and its base classes.
+    /// </summary>
+    public static IEnumerable<INamedTypeSymbol> GetContractCandidates(INamedTypeSymbol type)
+    {
+        foreach (var contract in type.AllInterfaces)
+        {
+            yield return contract;
+        }
+
+        for (var current = type; current is not null && current.SpecialType != SpecialType.System_Object; current = current.BaseType)
+        {
+            yield return current;
+        }
+    }
+
+    /// <summary>
+    /// Collects the requirements of every contract of <paramref name="type"/> (see <see cref="GetContractCandidates"/>).
+    /// Valid requirements are grouped by attribute type, in a stable order.
     /// </summary>
     public static (List<RequiredAttribute> Required, List<Requirement> Invalid) GetRequirements(INamedTypeSymbol type, KnownSymbols symbols)
     {
         var required = new List<RequiredAttribute>();
         var invalid = new List<Requirement>();
 
-        foreach (var contract in type.AllInterfaces)
+        foreach (var contract in GetContractCandidates(type))
         {
             foreach (var requirement in GetDeclaredRequirements(contract, symbols))
             {
@@ -265,16 +282,50 @@ internal static class ContractModel
         return false;
     }
 
-    public static string JoinContracts(List<INamedTypeSymbol> contracts)
+    /// <summary>
+    /// Describes how <paramref name="type"/> is bound to <paramref name="contracts"/>, for example
+    /// <c>implements 'IPlugin'</c>, <c>derives from 'PluginBase'</c> or <c>is marked with [RequiresMetadata]</c>.
+    /// </summary>
+    public static string DescribeContracts(INamedTypeSymbol type, List<INamedTypeSymbol> contracts)
     {
-        var names = new string[contracts.Count];
+        var interfaces = new List<string>();
+        var baseClasses = new List<string>();
+        var self = false;
 
-        for (var i = 0; i < contracts.Count; i++)
+        foreach (var contract in contracts)
         {
-            names[i] = contracts[i].ToDisplayString();
+            if (SymbolEqualityComparer.Default.Equals(contract, type))
+            {
+                self = true;
+            }
+            else if (contract.TypeKind == TypeKind.Interface)
+            {
+                interfaces.Add(contract.ToDisplayString());
+            }
+            else
+            {
+                baseClasses.Add(contract.ToDisplayString());
+            }
         }
 
-        return string.Join("', '", names);
+        var phrases = new List<string>();
+
+        if (interfaces.Count > 0)
+        {
+            phrases.Add("implements '" + string.Join("', '", interfaces) + "'");
+        }
+
+        if (baseClasses.Count > 0)
+        {
+            phrases.Add("derives from '" + string.Join("', '", baseClasses) + "'");
+        }
+
+        if (self)
+        {
+            phrases.Add("is marked with [RequiresMetadata]");
+        }
+
+        return string.Join(" and ", phrases);
     }
 
     private static bool InheritsFrom(INamedTypeSymbol type, INamedTypeSymbol baseType)

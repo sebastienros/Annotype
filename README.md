@@ -4,8 +4,8 @@
 
 **Move invariants from instances to types.**
 
-Annotype is a Roslyn-powered framework for type-level metadata in C#. A contract interface declares which
-attributes its implementations must carry. An analyzer turns a missing attribute into a compile-time error, and
+Annotype is a Roslyn-powered framework for type-level metadata in C#. A contract (an interface or a base class)
+declares which attributes its implementations must carry. An analyzer turns a missing attribute into a compile-time error, and
 a source generator captures the attribute values into a registry so they can be read back **without
 reflection and without creating an instance** of the annotated type.
 

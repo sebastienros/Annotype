@@ -10,11 +10,11 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor MissingRequiredMetadata = new(
         id: "ANNO001",
         title: "Implementation is missing required metadata",
-        messageFormat: "Type '{0}' implements '{1}' but is missing required attribute '{2}'",
+        messageFormat: "Type '{0}' {1} but is missing required attribute '{2}'",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Every concrete class implementing a contract interface must declare each attribute required by [RequiresMetadata] directly on its own declaration. Attributes inherited from base classes do not satisfy the requirement.",
+        description: "Every concrete class implementing a contract interface, or deriving from a contract class, must declare each attribute required by [RequiresMetadata] directly on its own declaration. Attributes inherited from base classes do not satisfy the requirement.",
         helpLinkUri: HelpLinkBase + "anno001");
 
     public static readonly DiagnosticDescriptor InvalidContract = new(

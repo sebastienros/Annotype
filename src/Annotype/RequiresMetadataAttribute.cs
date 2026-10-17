@@ -3,8 +3,9 @@ using System;
 namespace Annotype;
 
 /// <summary>
-/// Declares that every concrete class implementing the annotated interface must carry an attribute of
-/// <see cref="AttributeType"/> directly on its declaration.
+/// Declares that every concrete class implementing the annotated interface, or deriving from the annotated class
+/// (including the class itself when it is concrete), must carry an attribute of <see cref="AttributeType"/>
+/// directly on its declaration.
 /// </summary>
 /// <remarks>
 /// The requirement is enforced at compile time by the Annotype analyzer (diagnostic <c>ANNO001</c>) in every
@@ -12,7 +13,7 @@ namespace Annotype;
 /// Annotype source generator and can be retrieved with <see cref="Metadata.Get{TImplementation, TAttribute}"/>
 /// once the generated registry is registered.
 /// </remarks>
-[AttributeUsage(AttributeTargets.Interface, AllowMultiple = true, Inherited = false)]
+[AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class RequiresMetadataAttribute : Attribute
 {
     /// <summary>

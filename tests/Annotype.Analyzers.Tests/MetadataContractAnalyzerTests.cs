@@ -430,6 +430,138 @@ public class MetadataContractAnalyzerTests
     }
 
     [Fact]
+    public async Task AbstractBaseClassContractIsEnforcedOnConcreteDescendants()
+    {
+        var diagnostics = await AnalyzeAsync("""
+            using Annotype;
+            using Payments.Contracts;
+
+            [RequiresMetadata(typeof(PluginMetadataAttribute))]
+            public abstract class PluginBase { }
+
+            public abstract class Intermediate : PluginBase { }
+
+            [PluginMetadata("ok")]
+            public sealed class Annotated : Intermediate { }
+
+            public sealed class Missing : Intermediate { }
+            """);
+
+        var diagnostic = Assert.Single(diagnostics);
+        Assert.Equal("ANNO001", diagnostic.Id);
+        Assert.Equal("Missing", GetLocationText(diagnostic));
+        Assert.Equal(
+            "Type 'Missing' derives from 'PluginBase' but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'",
+            diagnostic.GetMessage(System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public async Task ConcreteContractClassMustSatisfyItsOwnRequirement()
+    {
+        var diagnostics = await AnalyzeAsync("""
+            using Annotype;
+            using Payments.Contracts;
+
+            [RequiresMetadata(typeof(PluginMetadataAttribute))]
+            public class SelfContract { }
+
+            [PluginMetadata("child")]
+            public class Child : SelfContract { }
+
+            public class GrandChild : Child { }
+            """);
+
+        Assert.Collection(
+            diagnostics,
+            d => Assert.Equal(
+                "Type 'SelfContract' is marked with [RequiresMetadata] but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'",
+                d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)),
+            d => Assert.Equal(
+                "Type 'GrandChild' derives from 'SelfContract' but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'",
+                d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)));
+    }
+
+    [Fact]
+    public async Task ClassAndInterfaceRequiringSameAttributeReportOneError()
+    {
+        var diagnostics = await AnalyzeAsync("""
+            using Annotype;
+            using Payments.Contracts;
+
+            [RequiresMetadata(typeof(PluginMetadataAttribute))]
+            public abstract class PluginBase : IPlugin
+            {
+                public void Execute() { }
+            }
+
+            public sealed class Missing : PluginBase { }
+            """);
+
+        var diagnostic = Assert.Single(diagnostics);
+        Assert.Equal(
+            "Type 'Missing' implements 'Payments.Contracts.IPlugin' and derives from 'PluginBase' but is missing required attribute 'Payments.Contracts.PluginMetadataAttribute'",
+            diagnostic.GetMessage(System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public async Task GenericBaseClassContractIsEnforced()
+    {
+        var diagnostics = await AnalyzeAsync("""
+            using Annotype;
+            using Payments.Contracts;
+
+            [RequiresMetadata(typeof(PluginMetadataAttribute))]
+            public abstract class PluginBase<T> { }
+
+            public sealed class Missing : PluginBase<int> { }
+            """);
+
+        Assert.Equal("Missing", GetLocationText(Assert.Single(diagnostics)));
+    }
+
+    [Fact]
+    public async Task InvalidClassContractReportsAnno002()
+    {
+        var diagnostics = await AnalyzeAsync("""
+            using Annotype;
+
+            [RequiresMetadata(typeof(string))]
+            public abstract class Broken { }
+
+            public sealed class Implementation : Broken { }
+            """);
+
+        var diagnostic = Assert.Single(diagnostics);
+        Assert.Equal("ANNO002", diagnostic.Id);
+        Assert.Equal("RequiresMetadata(typeof(string))", GetLocationText(diagnostic));
+    }
+
+    [Fact]
+    public async Task ClassContractFromReferencedAssemblyIsEnforced()
+    {
+        var contracts = TestCompilation.ToReference(TestCompilation.Create(Contracts + """
+
+            namespace Payments.Contracts
+            {
+                [Annotype.RequiresMetadata(typeof(PluginMetadataAttribute))]
+                public abstract class PluginBase { }
+            }
+            """, "Payments.Contracts"));
+        var compilation = TestCompilation.Create("""
+            using Payments.Contracts;
+
+            [PluginMetadata("ok")]
+            public sealed class Valid : PluginBase { }
+
+            public sealed class Missing : PluginBase { }
+            """, "Payments.Plugins", [contracts]);
+
+        var diagnostics = await TestCompilation.GetAnalyzerDiagnosticsAsync(compilation);
+
+        Assert.Equal("Missing", GetLocationText(Assert.Single(diagnostics)));
+    }
+
+    [Fact]
     public async Task CompilationWithoutAnnotypeContractsReportsNothing()
     {
         var diagnostics = await AnalyzeAsync("""

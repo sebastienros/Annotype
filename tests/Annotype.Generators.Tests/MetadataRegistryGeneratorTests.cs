@@ -416,6 +416,33 @@ public class MetadataRegistryGeneratorTests
     }
 
     [Fact]
+    public void ClassContractsAreGenerated()
+    {
+        var compilation = TestCompilation.Create([Contracts, """
+            using Annotype;
+            using Payments.Contracts;
+
+            [RequiresMetadata(typeof(PluginMetadataAttribute))]
+            public abstract class PluginBase { }
+
+            [PluginMetadata("derived", Priority = 3)]
+            public sealed class Derived : PluginBase { }
+            """], "Class.Contracts");
+
+        var run = TestCompilation.RunGenerator(compilation);
+        Assert.Empty(run.Diagnostics);
+        TestCompilation.AssertClean(run.Output);
+
+        var assembly = TestCompilation.Load(run.Output);
+        var registry = TestCompilation.GetRegistry(assembly, "Annotype.Generated.Class_Contracts");
+        var attributeType = assembly.GetType("Payments.Contracts.PluginMetadataAttribute")!;
+
+        Assert.True(registry.TryGet(assembly.GetType("Derived")!, attributeType, out var metadata));
+        Assert.Equal("derived", attributeType.GetProperty("Name")!.GetValue(metadata));
+        Assert.False(registry.TryGet(assembly.GetType("PluginBase")!, attributeType, out _));
+    }
+
+    [Fact]
     public void PartialTypeProducesSingleEntry()
     {
         var run = Generate("""

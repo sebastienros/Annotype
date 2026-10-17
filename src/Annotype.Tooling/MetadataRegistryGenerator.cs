@@ -40,8 +40,7 @@ public sealed class MetadataRegistryGenerator : IIncrementalGenerator
     private static ImplementationModel? Transform(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         if (context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken) is not INamedTypeSymbol type
-            || !ContractModel.IsInScope(type)
-            || type.AllInterfaces.IsEmpty)
+            || !ContractModel.IsInScope(type))
         {
             return null;
         }

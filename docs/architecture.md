@@ -39,9 +39,10 @@ implementation type.
 
 `MetadataContractAnalyzer` registers a symbol action on named types:
 
-- **Interfaces**: each `[RequiresMetadata]` is validated (`ANNO002`).
-- **Concrete classes** (non-abstract, non-static, including record classes): every interface in
-  `AllInterfaces` is inspected, which covers interfaces implemented by base classes and inherited interfaces.
+- **Interfaces and classes**: each `[RequiresMetadata]` they declare is validated (`ANNO002`).
+- **Concrete classes** (non-abstract, non-static, including record classes): the contracts are every interface in
+  `AllInterfaces` (which covers interfaces implemented by base classes and inherited interfaces), the class itself
+  and each of its base classes.
   Requirements are grouped by attribute type with `SymbolEqualityComparer.Default`, so one `ANNO001` is reported
   per missing attribute regardless of how many contracts require it. `partial` types are a single symbol, so
   they are reported once on their first declaration.
