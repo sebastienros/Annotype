@@ -29,6 +29,20 @@ public class MetadataTests
     }
 
     [Fact]
+    public void PropertiesCanBeCustomClassesBuiltByTheConstructor()
+    {
+        var first = Metadata.Get<Payments.Plugins.PaymentPlugin, PaymentLimitsAttribute>();
+        var second = Metadata.Get<Payments.Plugins.PaymentPlugin, PaymentLimitsAttribute>();
+
+        Assert.Equal(0.50m, first.Minimum.Amount);
+        Assert.Equal("EUR", first.Minimum.Currency);
+        Assert.Equal(10000m, first.Maximum.Amount);
+
+        // The constructor runs for every snapshot, so custom instances are never shared.
+        Assert.NotSame(first.Minimum, second.Minimum);
+    }
+
+    [Fact]
     public void GetDoesNotInstantiateTheImplementation()
     {
         var before = Volatile.Read(ref Tracker.Constructions);

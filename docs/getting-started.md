@@ -66,6 +66,42 @@ hash of the name is appended to avoid collisions. To see the generated file:
 <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 ```
 
+### Richer property types
+
+Attribute arguments are limited by C# to constants: primitives, `string`, enums, `Type`, `object` and arrays of
+those. The properties an attribute *exposes* are not. The generated registry replays the attribute's constructor,
+so the constructor can turn constants into any type. The sample's `PaymentLimitsAttribute` builds `Money`
+instances (a custom class holding a `decimal`, which attributes cannot take directly):
+
+```csharp
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class PaymentLimitsAttribute : Attribute
+{
+    public PaymentLimitsAttribute(string minimum, string maximum)
+    {
+        Minimum = Money.Parse(minimum);
+        Maximum = Money.Parse(maximum);
+    }
+
+    public Money Minimum { get; }
+    public Money Maximum { get; }
+}
+
+[RequiresMetadata(typeof(PaymentLimitsAttribute))]
+public interface IPaymentProcessor : IPlugin { }
+
+[PluginMetadata("payments", Priority = 10)]
+[PaymentLimits("0.50 EUR", "10000 EUR")]
+public sealed class PaymentPlugin : IPaymentProcessor { /* ... */ }
+```
+
+Annotype captures the constant arguments, not the resulting objects, so:
+
+- each `Metadata.Get` call runs the constructor again and returns new `Money` instances, mutable or not;
+- the constructor should only depend on its arguments. Returning a shared instance, reading the clock or
+  configuration, or having side effects makes the metadata unstable;
+- conversion errors (for example `"1.x EUR"`) surface when the metadata is read, not at compile time.
+
 ## 3. Host
 
 ```csharp
@@ -118,6 +154,7 @@ dotnet run --project samples/Payments.Host
 
 ```text
 PaymentPlugin: Name=payments, Priority=10
+PaymentPlugin: Minimum=0.50 EUR, Maximum=10000.00 EUR
 RefundPlugin: Name=refunds, Priority=0
 Program: no metadata
 ```

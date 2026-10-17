@@ -9,6 +9,10 @@ Metadata.Register(Annotype.Generated.Payments_Plugins.MetadataRegistry.Instance)
 var payments = Metadata.Get<PaymentPlugin, PluginMetadataAttribute>();
 Console.WriteLine($"{nameof(PaymentPlugin)}: Name={payments.Name}, Priority={payments.Priority}");
 
+// Properties can be custom classes built by the attribute's constructor from constant arguments.
+var limits = Metadata.Get<PaymentPlugin, PaymentLimitsAttribute>();
+Console.WriteLine($"{nameof(PaymentPlugin)}: Minimum={limits.Minimum}, Maximum={limits.Maximum}");
+
 // RefundPlugin's constructor throws, which proves no instance is created.
 var refunds = Metadata.Get<RefundPlugin, PluginMetadataAttribute>();
 Console.WriteLine($"{nameof(RefundPlugin)}: Name={refunds.Name}, Priority={refunds.Priority}");

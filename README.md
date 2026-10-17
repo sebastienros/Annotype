@@ -135,7 +135,9 @@ These are deliberate in this version. See [docs/architecture.md](docs/architectu
 Constructor arguments and public named properties or fields of the following kinds are captured:
 `bool`, `char`, `string`, all integral types, `float`, `double`, enums (including undefined and flag values),
 `typeof(...)` (including open generic types such as `typeof(List<>)`), `null`, `object` holding any of these,
-and single-dimensional arrays of them. Values that cannot be recreated from the implementation's assembly (for
+and single-dimensional arrays of them. These are C#'s limits on attribute arguments; the properties an attribute
+exposes can be of any type built by its constructor (see
+[richer property types](docs/getting-started.md#richer-property-types)). Values that cannot be recreated from the implementation's assembly (for
 example `typeof` of a private nested type) are reported with `ANNO003`.
 
 ## Compatibility
