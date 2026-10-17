@@ -16,6 +16,11 @@ on:
     - 'docs/**'
     - 'README.md'
 
+# A newer push to the same branch or PR supersedes older runs; Actions runners are shared across the account.
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
 
