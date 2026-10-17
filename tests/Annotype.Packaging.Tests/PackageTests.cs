@@ -77,6 +77,7 @@ public class PackageTests(PackageFixture fixture)
         Assert.Contains("lib/netstandard2.0/Annotype.xml", entries);
         Assert.Contains("analyzers/dotnet/cs/Annotype.Tooling.dll", entries);
         Assert.Contains("README.md", entries);
+        Assert.Contains("icon.png", entries);
 
         // Roslyn is provided by the compiler host and must never be shipped.
         Assert.DoesNotContain(entries, static e => e.Contains("Microsoft.CodeAnalysis", StringComparison.OrdinalIgnoreCase));
@@ -89,6 +90,7 @@ public class PackageTests(PackageFixture fixture)
 
         Assert.Equal(fixture.Version, nuspec.Descendants().Single(static e => e.Name.LocalName == "version").Value);
         Assert.Empty(dependencies);
+        Assert.Equal("icon.png", nuspec.Descendants().Single(static e => e.Name.LocalName == "icon").Value);
         Assert.True(File.Exists(Path.ChangeExtension(fixture.PackagePath, ".snupkg")));
     }
 

@@ -1,0 +1,48 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Annotype">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="0.55" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="tag" x1="200" y1="0" x2="316" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A5F3FC"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="string" x1="150" y1="0" x2="232" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+    <mask id="eyelet" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect x="0" y="0" width="512" height="512" fill="#FFFFFF"/>
+      <circle cx="232" cy="256" r="12" fill="#000000"/>
+    </mask>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1E1B4B" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- App-icon background -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#gloss)"/>
+
+  <g filter="url(#soft)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Type brackets < > -->
+    <path d="M190 136 L112 256 L190 376" stroke="#FFFFFF" stroke-width="30"/>
+    <path d="M322 136 L400 256 L322 376" stroke="#FFFFFF" stroke-width="30"/>
+
+    <!-- Annotation tag carried by the type -->
+    <path d="M236 204 L304 204 Q318 204 318 218 L318 294 Q318 308 304 308 L236 308 L202 256 Z"
+          fill="url(#tag)" stroke="url(#tag)" stroke-width="12" mask="url(#eyelet)"/>
+    <!-- Metadata lines on the tag -->
+    <path d="M258 240 L294 240" stroke="#4F46E5" stroke-width="12"/>
+    <path d="M258 272 L282 272" stroke="#4F46E5" stroke-width="12"/>
+
+    <!-- String tying the tag to the type -->
+    <path d="M232 256 C230 196 176 178 150 210" stroke="url(#string)" stroke-width="10"/>
+  </g>
+</svg>

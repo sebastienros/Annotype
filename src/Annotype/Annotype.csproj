@@ -6,6 +6,7 @@
     <Description>Move invariants from instances to types. Compile-time enforced, reflection-free type metadata for .NET: interfaces declare required attributes, an analyzer enforces them, and a source generator emits a registry to read them back without reflection.</Description>
     <PackageTags>attributes;metadata;analyzer;source-generator;roslyn;plugins;aot</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
@@ -14,6 +15,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Annotype.Runtime.Tests" />
     <None Include="../../README.md" Pack="true" PackagePath="/" Visible="false" />
+    <None Include="../../assets/icon.png" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
   <!-- The analyzer and generator ship inside this package under analyzers/dotnet/cs so that a single

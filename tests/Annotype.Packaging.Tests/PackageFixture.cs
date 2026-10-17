@@ -52,6 +52,7 @@ public sealed class PackageFixture : IAsyncLifetime
             CopyFile(Path.Combine(RepositoryRoot, file), Path.Combine(source, file));
         }
 
+        CopyFile(Path.Combine(RepositoryRoot, "assets", "icon.png"), Path.Combine(source, "assets", "icon.png"));
         CopyDirectory(Path.Combine(RepositoryRoot, "src", "Annotype"), Path.Combine(source, "src", "Annotype"));
         CopyDirectory(Path.Combine(RepositoryRoot, "src", "Annotype.Tooling"), Path.Combine(source, "src", "Annotype.Tooling"));
 

@@ -1,3 +1,5 @@
+![Annotype](https://raw.githubusercontent.com/sebastienros/annotype/main/assets/banner.png)
+
 # Annotype
 
 **Move invariants from instances to types.**
