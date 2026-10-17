@@ -6,9 +6,9 @@
     <!-- The tooling runs in the consumer's compiler host. Roslyn 4.8 ships with the .NET 8.0.100 SDK, which
          is the minimum supported compiler. Upgrading causes CS9057 on older SDKs; MinimumSdkTests checks it. -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
     <!-- Global Package References -->
-    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
+    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.402" />
     <GlobalPackageReference Include="PolySharp" Version="1.16.0" />
     <!-- Testing -->
     <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.2" />
