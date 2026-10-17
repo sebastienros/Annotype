@@ -1,6 +1,10 @@
-![Annotype](https://raw.githubusercontent.com/sebastienros/annotype/main/assets/banner.png)
+![Annotype](assets/banner.png)
 
 # Annotype
+
+[![NuGet](https://img.shields.io/nuget/v/Annotype.svg?label=nuget.org)](https://www.nuget.org/packages/Annotype)
+[![Feedz preview version](https://img.shields.io/endpoint?url=https%3A%2F%2Ff.feedz.io%2Fsebastienros%2Fannotype%2Fshield%2FAnnotype%2Flatest)](https://f.feedz.io/sebastienros/annotype/nuget/index.json)
+[![BSD-3-Clause](https://img.shields.io/github/license/sebastienros/annotype)](https://github.com/sebastienros/annotype/blob/main/LICENSE)
 
 **Move invariants from instances to types.**
 
@@ -23,6 +27,27 @@ Reference the package from **every project that declares contracts or implementa
 ```
 
 One package brings the runtime API (`lib/`) and the analyzer and generator (`analyzers/dotnet/cs/`).
+
+### NuGet feeds
+
+| Source | Purpose | Package feed |
+| --- | --- | --- |
+| Tagged releases (`v*`) | Stable releases. | [![NuGet.org stable version](https://img.shields.io/nuget/v/Annotype.svg?label=nuget.org)](https://www.nuget.org/packages/Annotype) |
+| [`main`](https://github.com/sebastienros/annotype/tree/main) | Latest development changes. | [![Feedz preview version](https://img.shields.io/endpoint?url=https%3A%2F%2Ff.feedz.io%2Fsebastienros%2Fannotype%2Fshield%2FAnnotype%2Flatest)](https://f.feedz.io/sebastienros/annotype/nuget/index.json) |
+
+### Preview packages
+
+Every successful build on `main` publishes a preview package to the
+[Annotype feed on feedz.io](https://f.feedz.io/sebastienros/annotype/nuget/index.json).
+Versions follow `0.1.0-preview-<run number>`, using the GitHub Actions build run number.
+These packages contain the latest development changes and are intended for testing before release.
+
+Add the preview feed alongside NuGet.org, then install the latest prerelease version:
+
+```shell
+dotnet nuget add source https://f.feedz.io/sebastienros/annotype/nuget/index.json --name annotype-preview
+dotnet add package Annotype --prerelease
+```
 
 ### 1. Declare a contract
 

@@ -21,15 +21,16 @@
   <!-- The analyzer and generator ship inside this package under analyzers/dotnet/cs so that a single
        PackageReference brings both the runtime API and the compile-time tooling. -->
   <ItemGroup>
+    <!-- No SetTargetFramework: the tooling is single-targeted, so this reference resolves to the same project
+         instance as the solution build. Extra global properties would compile it twice in parallel, which fails
+         on Windows with CS2012 (file in use). -->
     <ProjectReference Include="../Annotype.Tooling/Annotype.Tooling.csproj"
                       ReferenceOutputAssembly="false"
-                      PrivateAssets="all"
-                      SetTargetFramework="TargetFramework=netstandard2.0"
-                      SkipGetTargetFrameworkProperties="true" />
+                      PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="AddAnnotypeToolingToPackage" BeforeTargets="_GetPackageFiles">
-    <MSBuild Projects="../Annotype.Tooling/Annotype.Tooling.csproj" Targets="GetTargetPath" Properties="TargetFramework=netstandard2.0">
+    <MSBuild Projects="../Annotype.Tooling/Annotype.Tooling.csproj" Targets="GetTargetPath" RemoveProperties="TargetFramework">
       <Output TaskParameter="TargetOutputs" ItemName="_AnnotypeToolingAssembly" />
     </MSBuild>
     <ItemGroup>
