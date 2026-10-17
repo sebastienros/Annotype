@@ -18,7 +18,16 @@ lets you say so, enforce it, and read it cheaply.
 
 > Status: preview (0.1). The API and diagnostics may change before 1.0.
 
+## Documentation
+
+- [Getting started](docs/getting-started.md): contracts, plugins and host step by step, class contracts, richer
+  property types, dynamically loaded plugins, Native AOT.
+- [Diagnostics](docs/diagnostics.md): every `ANNO` rule, why it fires and how to fix it.
+- [Architecture](docs/architecture.md): how the runtime, analyzer and generator work, and the design trade-offs.
+
 ## Getting started
+
+The [getting started guide](docs/getting-started.md) walks through the full sample in more detail.
 
 Reference the package from **every project that declares contracts or implementations**:
 
